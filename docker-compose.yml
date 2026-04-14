@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: loans-postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: loans_db
+  #   ports:
+  #     - '5432:5432'
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+  # volumes:
+  # postgres_data:
+  #   driver: local
+
+  mongo:
+    image: mongo:latest
+    container_name: loans-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+    driver: local
