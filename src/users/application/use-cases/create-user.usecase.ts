@@ -14,7 +14,7 @@ export class CreateUserUseCase {
         password: string,
     ): Promise<User> {
         const hashedPassword = await this.passwordHasher.hash(password);
-        const user = new User("A", email, name, hashedPassword)
+        const user = User.create({ userId: "A", email: email, name: name, password: hashedPassword });
         return this.userRepository.create(user);
     }
 }

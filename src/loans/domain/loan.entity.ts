@@ -1,10 +1,11 @@
 import { LoanStatus } from "./loan.interfaces";
+import {LoanAmount} from "./value-objects/loan-amount";
 
 export class Loan {
-    constructor(
+    private constructor(
         public userId: string,
         public customerId: string,
-        public amount: number,
+        public amount: LoanAmount,
         public interest: number,
         public paymentDate: Date,
         private status: LoanStatus,
@@ -13,15 +14,14 @@ export class Loan {
         public readonly updatedAt: Date = new Date(),
     ) {}
 
+    // static -> Loan.create is a class member
     public static create(props: {
         userId: string,
         customerId: string,
-        amount: number,
+        amount: LoanAmount,
         interest: number,
         paymentDate: Date,
     }): Loan {
-
-        if(props.amount <= 0) throw new Error("Amount must be greater than 0");
 
         return new Loan(
             props.userId,
@@ -31,7 +31,14 @@ export class Loan {
             props.paymentDate,
             LoanStatus.PENDING,
         )
+    }
+    // without static is like loan.getAmount() -> is an instance member
+    public getAmount(): number {
+        return this.amount.getValue();
+    }
 
+    public getStatus(): LoanStatus {
+        return this.status;
     }
 
     public static updateStatus(props: {

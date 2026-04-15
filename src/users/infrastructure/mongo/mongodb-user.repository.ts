@@ -14,13 +14,23 @@ export class MongodbUserRepository implements UserRepository {
     async create(user: User): Promise<User> {
         const newUser = new this.userModel(user);
         await newUser.save();
-        return new User(newUser.userId, newUser.email, newUser.name, newUser.password);
+        return User.create({
+            userId: newUser.userId,
+            email: newUser.email,
+            name: newUser.name,
+            password: newUser.password,
+        });
     }
 
     async findById(id: string): Promise<User | null> {
         const user = await this.userModel.findOne({ userId: id });
         if (!user) return null;
-        return new User(user.userId, user.email, user.name, user.password);
+        return User.create({
+            userId: user.userId,
+            email: user.email,
+            name: user.name,
+            password: user.password,
+        });
     }
 
     async findAll(page: number, limit: number): Promise<{ users: User[], metadata: GetMetadataI }> {
@@ -41,12 +51,12 @@ export class MongodbUserRepository implements UserRepository {
         ])
 
         return {
-            users: users.map((user) => new User(
-                user.userId,
-                user.email,
-                user.name,
-                user.password
-            )),
+            users: users.map((user) => User.create({
+                userId: user.userId,
+                email: user.email,
+                name: user.name,
+                password: user.password,
+            })),
             metadata: {
                 currentPage: page,
                 lastPage: Math.ceil(totalDocuments / limit),
@@ -62,7 +72,12 @@ export class MongodbUserRepository implements UserRepository {
             { new: true }
         );
         if (!updated) throw new Error('User not found');
-        return new User(updated.userId, updated.email, updated.name, updated.password);
+        return User.create({
+            userId: updated.userId,
+            email: updated.email,
+            name: updated.name,
+            password: updated.password,
+        });
     }
 
     async delete(id: string): Promise<void> {

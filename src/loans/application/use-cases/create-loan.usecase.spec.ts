@@ -1,6 +1,7 @@
 import {CreateLoanUseCase} from './create-loan.usecase'
 import {Loan} from "../../domain/loan.entity";
 import {Strategies} from "../../domain/strategies/loan-interest.factory";
+import {LoanAmount} from "../../domain/value-objects/loan-amount";
 
 describe('CreateLoanUseCase', () => {
     let useCase: CreateLoanUseCase;
@@ -38,11 +39,12 @@ describe('CreateLoanUseCase', () => {
         strategyMock.calculate.mockReturnValue(150)// interestRate
 
         loanRepositoryMock.create.mockImplementation(async (loan: Loan) => loan);
+        const amountVO = LoanAmount.create(1000)
 
         const result = await useCase.execute(
             'user1',
             'customer1',
-            1000,
+            amountVO.getValue(),
             0.15,
             Strategies.Dynamic
         )
@@ -57,9 +59,10 @@ describe('CreateLoanUseCase', () => {
 
     it('should throw error if user does not exist', async() => {
         userLoanRepositoryMock.exists.mockResolvedValue(false)//userExists
+        let amountVO = LoanAmount.create(1000)
 
         await expect(
-            useCase.execute('user1', 'customer1', 1000, 0.15, Strategies.Dynamic),
+            useCase.execute('user1', 'customer1', amountVO.getValue(), 0.15, Strategies.Dynamic),
         ).rejects.toThrow('User not found');
 
         expect(loanRepositoryMock.create).not.toHaveBeenCalled();

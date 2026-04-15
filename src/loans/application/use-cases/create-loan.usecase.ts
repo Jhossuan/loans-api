@@ -2,6 +2,7 @@ import {Loan} from "../../domain/loan.entity";
 import {ILoanRepository} from "../../domain/loan.repository";
 import {ILoanUserRepository} from "../../domain/loan-user.repository";
 import {ILoanInterestFactory, Strategies} from "../../domain/strategies/loan-interest.factory";
+import {LoanAmount} from "../../domain/value-objects/loan-amount";
 
 export class CreateLoanUseCase {
     constructor(
@@ -19,7 +20,6 @@ export class CreateLoanUseCase {
     ): Promise<Loan> {
         //1. Search if the user exist
         const userExists = await this.userLoanRepository.exists(userId)
-        console.log('User Exists: ', userExists)
         if(!userExists){
             throw new Error("User not found");
         }
@@ -27,18 +27,16 @@ export class CreateLoanUseCase {
         //2. Calculate the loan interest
         const strategy = this.factory.getStrategy(loanType)
         const interestRate = strategy.calculate(amount, term)
-        console.log('Interest Rate: ',interestRate)
 
-        //3. Create loan
+        //4. Create loan
         const loan = Loan.create({
             userId,
             customerId,
-            amount,
+            amount: LoanAmount.create(amount),
             interest: interestRate,
             paymentDate: new Date(),
         })
 
-        console.log('Loan: ', loan)
         return await this.loanRepository.create(loan);
     }
 }
