@@ -2,6 +2,8 @@ import {LoanInterestStrategy} from "../../domain/strategies/loan-interest.strate
 
 export class DynamicInterestStrategy implements LoanInterestStrategy {
     calculate(amount: number, term: number): number {
-        return amount * term;
+        let formattedTerm = term;
+        if(Number.isInteger(term)) formattedTerm = (term / 100)
+        return amount * formattedTerm;
     }
 }

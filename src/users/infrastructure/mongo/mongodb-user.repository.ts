@@ -4,6 +4,7 @@ import { User as UserSchema } from './schemas/user.schema';
 import { GetMetadataI } from '../../domain/user.interfaces';
 import { UserRepository } from '../../domain/user.repository';
 import { InjectModel } from '@nestjs/mongoose/dist';
+import {AppError} from "../../../common/errors/app-error";
 
 export class MongodbUserRepository implements UserRepository {
 
@@ -12,19 +13,28 @@ export class MongodbUserRepository implements UserRepository {
     ){}
 
     async create(user: User): Promise<User> {
-        const newUser = new this.userModel(user);
-        await newUser.save();
-        return User.create({
-            userId: newUser.userId,
-            email: newUser.email,
-            name: newUser.name,
-            password: newUser.password,
-        });
+        try {
+            const newUser = new this.userModel(user);
+            await newUser.save();
+            return User.create({
+                userId: newUser.userId,
+                email: newUser.email,
+                name: newUser.name,
+                password: newUser.password,
+            });
+        } catch (error: any) {
+            throw new AppError(
+                error?.message || "Error creating user",
+                500, error?.code
+            );
+        }
     }
 
     async findById(id: string): Promise<User | null> {
         const user = await this.userModel.findOne({ userId: id });
-        if (!user) return null;
+        if (!user) {
+            throw new AppError('User not found', 404);
+        }
         return User.create({
             userId: user.userId,
             email: user.email,
@@ -71,7 +81,7 @@ export class MongodbUserRepository implements UserRepository {
             { $set: user },
             { new: true }
         );
-        if (!updated) throw new Error('User not found');
+        if (!updated) throw new AppError('User not found', 400);
         return User.create({
             userId: updated.userId,
             email: updated.email,
@@ -86,7 +96,7 @@ export class MongodbUserRepository implements UserRepository {
             { $set: { visible: false } },
             { new: true }
         );
-        if (!deleted) throw new Error('User not found');
+        if (!deleted) throw new AppError('User not found', 400);
         return;
     }
 }

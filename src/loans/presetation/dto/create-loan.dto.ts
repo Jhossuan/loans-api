@@ -21,6 +21,9 @@ export class CreateLoanDto {
     @IsNumber()
     term!: number;
 
+    @IsString()
+    paymentDate!: string;
+
     @IsEnum(Strategies, {
         message: `loanType: Valid strategies ${StrategiesList}`
     })

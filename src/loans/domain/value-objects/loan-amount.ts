@@ -1,3 +1,5 @@
+import {AppError} from "../../../common/errors/app-error";
+
 export class LoanAmount {
 
     private readonly value: number;
@@ -8,19 +10,19 @@ export class LoanAmount {
 
     static create(value: number): LoanAmount {
         if(!value) {
-            throw new Error("Loan amount is required");
+            throw new AppError("Loan amount is required");
         }
 
         if(isNaN(value)) {
-            throw new Error("Loan amount must be a number");
+            throw new AppError("Loan amount must be a number");
         }
 
         if(value < 0) {
-            throw new Error("Loan amount must be a positive integer");
+            throw new AppError("Loan amount must be a positive integer");
         }
 
         if(value > 1_000_000_000){
-            throw new Error("Loan amount is too large");
+            throw new AppError("Loan amount is too large");
         }
 
         return new LoanAmount(value);

@@ -12,6 +12,7 @@ import {LoanController} from "./loan.controller";
 import {UserModule} from "../../users/presentation/user.module";
 import {FixedInterestStrategy} from "../infrastructure/strategies/fixed-interest.strategy";
 import {DynamicInterestStrategy} from "../infrastructure/strategies/dynamic-interest.strategy";
+import {GetLoansUseCase} from "../application/use-cases/get-loans.usecase";
 
 @Module({
     imports: [
@@ -44,6 +45,13 @@ import {DynamicInterestStrategy} from "../infrastructure/strategies/dynamic-inte
                 userLoanRepository: ILoanUserRepository
             ) => new CreateLoanUseCase(loanInterestFactory, loanRepository, userLoanRepository),
             inject: ["LOAN_INTEREST_STRATEGY", "LOAN_REPOSITORY", "LOAN_USER_REPOSITORY"],
+        },
+        {
+            provide: GetLoansUseCase,
+            useFactory: (
+                loanRepository: ILoanRepository,
+            ) => new GetLoansUseCase(loanRepository),
+            inject: ["LOAN_REPOSITORY"]
         }
     ],
 })

@@ -42,11 +42,13 @@ describe('CreateLoanUseCase', () => {
         const amountVO = LoanAmount.create(1000)
 
         const result = await useCase.execute(
+            'loanId',
             'user1',
             'customer1',
             amountVO.getValue(),
             0.15,
-            Strategies.Dynamic
+            Strategies.Dynamic,
+            "2026-05-01"
         )
 
         expect(userLoanRepositoryMock.exists).toHaveBeenCalledWith('user1');
@@ -62,7 +64,7 @@ describe('CreateLoanUseCase', () => {
         let amountVO = LoanAmount.create(1000)
 
         await expect(
-            useCase.execute('user1', 'customer1', amountVO.getValue(), 0.15, Strategies.Dynamic),
+            useCase.execute('loanId','user1', 'customer1', amountVO.getValue(), 0.15, Strategies.Dynamic, "2026-05-01"),
         ).rejects.toThrow('User not found');
 
         expect(loanRepositoryMock.create).not.toHaveBeenCalled();
