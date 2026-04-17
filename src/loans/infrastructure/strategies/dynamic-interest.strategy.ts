@@ -1,9 +1,11 @@
 import {LoanInterestStrategy} from "../../domain/strategies/loan-interest.strategy";
+import {AppError} from "../../../common/errors/app-error";
 
 export class DynamicInterestStrategy implements LoanInterestStrategy {
     calculate(amount: number, term: number): number {
-        let formattedTerm = term;
-        if(Number.isInteger(term)) formattedTerm = (term / 100)
-        return amount * formattedTerm;
+        if(!Number.isInteger(term)) {
+            throw new AppError("Interest term should be an integer");
+        }
+        return amount * (term / 100);
     }
 }

@@ -32,9 +32,7 @@ export class MongodbUserRepository implements UserRepository {
 
     async findById(id: string): Promise<User | null> {
         const user = await this.userModel.findOne({ userId: id });
-        if (!user) {
-            throw new AppError('User not found', 404);
-        }
+        if (!user) return null;
         return User.create({
             userId: user.userId,
             email: user.email,

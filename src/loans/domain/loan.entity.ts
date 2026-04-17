@@ -8,6 +8,7 @@ export class Loan {
         public customerId: string,
         public amount: LoanAmount,
         public interest: number,
+        public term: number,
         public paymentDate: Date,
         private status: LoanStatus,
         public readonly createdAt?: Date,
@@ -24,6 +25,7 @@ export class Loan {
         customerId: string,
         amount: LoanAmount,
         interest: number,
+        term: number,
         paymentDate: Date,
     }): Loan {
 
@@ -33,6 +35,7 @@ export class Loan {
             props.customerId,
             props.amount,
             props.interest,
+            props.term,
             props.paymentDate,
             LoanStatus.PENDING,
         )
@@ -44,6 +47,7 @@ export class Loan {
         customerId: string,
         amount: LoanAmount,
         interest: number,
+        term: number,
         status: LoanStatus,
         paymentDate: Date,
         createdAt?: Date,
@@ -55,6 +59,7 @@ export class Loan {
             props.customerId,
             props.amount,
             props.interest,
+            props.term,
             props.paymentDate,
             props.status,
             props.createdAt,
@@ -69,13 +74,6 @@ export class Loan {
 
     public getStatus(): LoanStatus {
         return this.status;
-    }
-
-    public static updateStatus(props: {
-        status: LoanStatus,
-    }){
-        // todo: develop this
-        return props;
     }
 
 }

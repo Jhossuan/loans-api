@@ -19,6 +19,7 @@ export class MongoDbLoanRepository implements ILoanRepository {
             customerId: loan.customerId,
             amount: loan.getAmount(),
             interest: loan.interest,
+            term: loan.term,
             paymentDate: loan.paymentDate,
         })
         await newLoan.save();
@@ -29,7 +30,31 @@ export class MongoDbLoanRepository implements ILoanRepository {
             customerId: newLoan.customerId,
             amount: LoanAmount.create(newLoan.amount),
             interest: newLoan.interest,
+            term: newLoan.term,
             paymentDate: newLoan.paymentDate,
+        })
+    }
+
+    async updateStatus(customerId: string, loanId: string, status: LoanStatus): Promise<Loan | null> {
+        const updatedStatus = await this.loanModel.findOneAndUpdate(
+            { loanId: loanId, customerId: customerId },
+            { $set: { status: status } },
+            { $new: true }
+        )
+
+        if(!updatedStatus) return null;
+
+        return Loan.getLoan({
+            loanId: updatedStatus.loanId,
+            userId: updatedStatus.userId,
+            customerId: updatedStatus.customerId,
+            amount: LoanAmount.create(updatedStatus.amount),
+            interest: updatedStatus.interest,
+            term: updatedStatus.term,
+            status: updatedStatus.status,
+            createdAt: updatedStatus.createdAt,
+            updatedAt: updatedStatus.updatedAt,
+            paymentDate: updatedStatus.paymentDate,
         })
     }
 
@@ -63,8 +88,9 @@ export class MongoDbLoanRepository implements ILoanRepository {
                 loanId: loan.loanId,
                 userId: loan.userId,
                 customerId: loan.customerId,
-                amount: loan.amount,
+                amount: LoanAmount.create(loan.amount),
                 interest: loan.interest,
+                term: loan.term,
                 status: loan.status,
                 createdAt: loan.createdAt,
                 updatedAt: loan.updatedAt,
@@ -77,6 +103,24 @@ export class MongoDbLoanRepository implements ILoanRepository {
             },
         }
 
+    }
+
+    async findById(loanId: string): Promise<Loan | null> {
+        const loan = await this.loanModel.findOne({ loanId: loanId });
+        if(!loan) return null;
+
+        return Loan.getLoan({
+            loanId: loan.loanId,
+            userId: loan.userId,
+            customerId: loan.customerId,
+            amount: LoanAmount.create(loan.amount),
+            interest: loan.interest,
+            term: loan.term,
+            status: loan.status,
+            paymentDate: loan.paymentDate,
+            createdAt: loan.createdAt,
+            updatedAt: loan.updatedAt,
+        })
     }
 
 }

@@ -11,6 +11,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
         let status = HttpStatus.INTERNAL_SERVER_ERROR;
         let message = exception?.message ?? "Internal Server Error";
+        let code = undefined;
 
         console.log('Exception: ' + exception);
 
@@ -21,6 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         } else if(exception instanceof AppError){
             status = exception.statusCode
             message = exception.message;
+            code = exception.errorCode;
         }
 
         response
@@ -30,7 +32,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 timestamp: new Date().toISOString(),
                 path: request.url,
                 message: message,
-                code: ''
+                code: code
             });
     }
 }

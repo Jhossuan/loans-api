@@ -38,6 +38,7 @@ export class CreateLoanUseCase {
             customerId,
             amount: LoanAmount.create(amount),
             interest: interestRate,
+            term: term,
             paymentDate: new Date(paymentDate),
         })
 

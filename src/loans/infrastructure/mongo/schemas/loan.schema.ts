@@ -20,11 +20,17 @@ export class Loan {
     @Prop({ type: Number })
     interest!: number;
 
+    @Prop({ type: Number })
+    term!: number;
+
     @Prop({ type: Date })
     paymentDate!: Date;
 
-    @Prop({ enum: LoanStatus })
+    @Prop({ enum: LoanStatus, default: LoanStatus.PENDING })
     status!: LoanStatus;
+
+    @Prop() createdAt?: Date;
+    @Prop() updatedAt?: Date;
 
 }
 
