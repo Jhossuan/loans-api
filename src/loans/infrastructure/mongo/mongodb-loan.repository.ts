@@ -6,6 +6,7 @@ import {Model} from "mongoose";
 import {LoanAmount} from "../../domain/value-objects/loan-amount";
 import {GetMetadataI} from "../../../common/response.interface";
 import {LoanStatus} from "../../domain/loan.interfaces";
+import {InterestTerm} from "../../domain/value-objects/interest-term";
 
 export class MongoDbLoanRepository implements ILoanRepository {
     constructor(
@@ -18,7 +19,7 @@ export class MongoDbLoanRepository implements ILoanRepository {
             userId: loan.userId,
             customerId: loan.customerId,
             amount: loan.getAmount(),
-            interest: loan.interest,
+            interest: loan.getInterest(),
             term: loan.term,
             paymentDate: loan.paymentDate,
         })
@@ -29,7 +30,7 @@ export class MongoDbLoanRepository implements ILoanRepository {
             userId: newLoan.userId,
             customerId: newLoan.customerId,
             amount: LoanAmount.create(newLoan.amount),
-            interest: newLoan.interest,
+            interest: InterestTerm.create(newLoan.interest),
             term: newLoan.term,
             paymentDate: newLoan.paymentDate,
         })
@@ -49,7 +50,7 @@ export class MongoDbLoanRepository implements ILoanRepository {
             userId: updatedStatus.userId,
             customerId: updatedStatus.customerId,
             amount: LoanAmount.create(updatedStatus.amount),
-            interest: updatedStatus.interest,
+            interest: InterestTerm.create(updatedStatus.interest),
             term: updatedStatus.term,
             status: updatedStatus.status,
             createdAt: updatedStatus.createdAt,
@@ -89,7 +90,7 @@ export class MongoDbLoanRepository implements ILoanRepository {
                 userId: loan.userId,
                 customerId: loan.customerId,
                 amount: LoanAmount.create(loan.amount),
-                interest: loan.interest,
+                interest: InterestTerm.create(loan.interest),
                 term: loan.term,
                 status: loan.status,
                 createdAt: loan.createdAt,
@@ -114,7 +115,7 @@ export class MongoDbLoanRepository implements ILoanRepository {
             userId: loan.userId,
             customerId: loan.customerId,
             amount: LoanAmount.create(loan.amount),
-            interest: loan.interest,
+            interest: InterestTerm.create(loan.interest),
             term: loan.term,
             status: loan.status,
             paymentDate: loan.paymentDate,

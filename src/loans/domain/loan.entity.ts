@@ -1,5 +1,6 @@
 import { LoanStatus } from "./loan.interfaces";
 import {LoanAmount} from "./value-objects/loan-amount";
+import {InterestTerm} from "./value-objects/interest-term";
 
 export class Loan {
     private constructor(
@@ -7,7 +8,7 @@ export class Loan {
         public userId: string,
         public customerId: string,
         public amount: LoanAmount,
-        public interest: number,
+        public interest: InterestTerm,
         public term: number,
         public paymentDate: Date,
         private status: LoanStatus,
@@ -24,7 +25,7 @@ export class Loan {
         userId: string,
         customerId: string,
         amount: LoanAmount,
-        interest: number,
+        interest: InterestTerm,
         term: number,
         paymentDate: Date,
     }): Loan {
@@ -46,7 +47,7 @@ export class Loan {
         userId: string,
         customerId: string,
         amount: LoanAmount,
-        interest: number,
+        interest: InterestTerm,
         term: number,
         status: LoanStatus,
         paymentDate: Date,
@@ -70,6 +71,10 @@ export class Loan {
     // without static is like loan.getAmount() -> is an instance member
     public getAmount(): number {
         return this.amount.getValue();
+    }
+
+    public getInterest(): number {
+        return this.interest.getValue();
     }
 
     public getStatus(): LoanStatus {

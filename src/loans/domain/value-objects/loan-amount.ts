@@ -2,9 +2,9 @@ import {AppError} from "../../../common/errors/app-error";
 
 export class LoanAmount {
 
-    private readonly value: number;
-
-    private constructor(value: number) {
+    private constructor(
+        private readonly value: number
+    ) {
         this.value = value;
     }
 

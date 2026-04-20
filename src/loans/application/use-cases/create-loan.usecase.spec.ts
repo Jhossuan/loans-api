@@ -46,14 +46,14 @@ describe('CreateLoanUseCase', () => {
             'user1',
             'customer1',
             amountVO.getValue(),
-            0.15,
+            15,
             Strategies.Dynamic,
             "2026-05-01"
         )
 
         expect(userLoanRepositoryMock.exists).toHaveBeenCalledWith('user1');
         expect(factoryMock.getStrategy).toHaveBeenCalledWith(Strategies.Dynamic);
-        expect(strategyMock.calculate).toHaveBeenCalledWith(1000, 0.15);
+        expect(strategyMock.calculate).toHaveBeenCalledWith(1000, 15);
         expect(loanRepositoryMock.create).toHaveBeenCalled();
 
         expect(result).toBeInstanceOf(Loan);
