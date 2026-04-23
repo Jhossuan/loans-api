@@ -14,6 +14,7 @@ import {FixedInterestStrategy} from "../infrastructure/strategies/fixed-interest
 import {DynamicInterestStrategy} from "../infrastructure/strategies/dynamic-interest.strategy";
 import {GetLoansUseCase} from "../application/use-cases/get-loans.usecase";
 import {UpdateLoanStatusUseCase} from "../application/use-cases/update-loan-status.usecase";
+import {LOAN_INTEREST_STRATEGY, LOAN_REPOSITORY, LOAN_USER_REPOSITORY} from "./constants";
 
 @Module({
     imports: [
@@ -27,15 +28,15 @@ import {UpdateLoanStatusUseCase} from "../application/use-cases/update-loan-stat
         FixedInterestStrategy,
         DynamicInterestStrategy,
         {
-            provide: "LOAN_INTEREST_STRATEGY",
+            provide: LOAN_INTEREST_STRATEGY,
             useClass: InterestStrategyFactory
         },
         {
-            provide: "LOAN_REPOSITORY",
+            provide: LOAN_REPOSITORY,
             useClass: MongoDbLoanRepository
         },
         {
-            provide: "LOAN_USER_REPOSITORY",
+            provide: LOAN_USER_REPOSITORY,
             useClass: LoanUserAdapter
         },
         {
@@ -45,19 +46,19 @@ import {UpdateLoanStatusUseCase} from "../application/use-cases/update-loan-stat
                 loanRepository: ILoanRepository,
                 userLoanRepository: ILoanUserRepository
             ) => new CreateLoanUseCase(loanInterestFactory, loanRepository, userLoanRepository),
-            inject: ["LOAN_INTEREST_STRATEGY", "LOAN_REPOSITORY", "LOAN_USER_REPOSITORY"],
+            inject: [LOAN_INTEREST_STRATEGY, LOAN_REPOSITORY, LOAN_USER_REPOSITORY],
         },
         {
             provide: GetLoansUseCase,
             useFactory: (
                 loanRepository: ILoanRepository,
             ) => new GetLoansUseCase(loanRepository),
-            inject: ["LOAN_REPOSITORY"]
+            inject: [LOAN_REPOSITORY]
         },
         {
             provide: UpdateLoanStatusUseCase,
             useFactory: (loanRepository: ILoanRepository, loanUserRepository: ILoanUserRepository) => new UpdateLoanStatusUseCase(loanRepository, loanUserRepository),
-            inject: ["LOAN_REPOSITORY", "LOAN_USER_REPOSITORY"]
+            inject: [LOAN_REPOSITORY, LOAN_USER_REPOSITORY]
         }
     ],
 })

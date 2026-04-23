@@ -11,43 +11,54 @@ import { User as UserDocument, UserSchema as UserSchemaFactory } from "../infras
 import {GetUsersUseCase} from "../application/use-cases/get-users.usecase";
 import {RedisCacheService} from "../../common/cache/redis-cache.service";
 import {CacheRepository} from "../../common/cache/cache.repository";
+import {LoginUserUseCase} from "../application/use-cases/login-user.usecase";
+import {AuthTokenRepository} from "../../common/auth/auth-token.repository";
+import {AuthModule} from "../../common/auth/auth.module";
+import {TOKEN_AUTH_REPOSITORY} from "../../common/auth/constants";
+import {CACHE_REPOSITORY, PASSWORD_HASHER, USER_REPOSITORY} from "./constants";
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: UserDocument.name, schema: UserSchemaFactory },
         ]),
+        AuthModule,
     ],
     exports: [MongodbUserRepository],
     controllers: [UserController],
     providers: [
         MongodbUserRepository,
         {
-            provide: "USER_REPOSITORY",
+            provide: USER_REPOSITORY,
             useClass: MongodbUserRepository,
         },
         {
-            provide: "CACHE_REPOSITORY",
+            provide: CACHE_REPOSITORY,
             useClass: RedisCacheService,
         },
         {
-            provide: "PASSWORD_HASHER",
+            provide: PASSWORD_HASHER,
             useClass: BcryptPasswordHasher
         },
         {
             provide: CreateUserUseCase,
             useFactory: (userRepository: UserRepository, passwordHasher: PasswordHasher) => new CreateUserUseCase(userRepository, passwordHasher),
-            inject: ["USER_REPOSITORY", "PASSWORD_HASHER"]
+            inject: [USER_REPOSITORY, PASSWORD_HASHER]
         },
         {
             provide: UpdateUserUseCase,
             useFactory: (userRepository: UserRepository) => new UpdateUserUseCase(userRepository),
-            inject: ["USER_REPOSITORY"]
+            inject: [USER_REPOSITORY]
         },
         {
             provide: GetUsersUseCase,
             useFactory: (userRepository: UserRepository, cacheRepository: CacheRepository) => new GetUsersUseCase(userRepository, cacheRepository),
-            inject: ["USER_REPOSITORY", "CACHE_REPOSITORY"]
+            inject: [USER_REPOSITORY, CACHE_REPOSITORY]
+        },
+        {
+            provide: LoginUserUseCase,
+            useFactory: (userRepository: UserRepository, passwordHasher: PasswordHasher, authTokenRepository: AuthTokenRepository) => new LoginUserUseCase(userRepository, passwordHasher, authTokenRepository),
+            inject: [USER_REPOSITORY, PASSWORD_HASHER, TOKEN_AUTH_REPOSITORY]
         }
     ],
 })

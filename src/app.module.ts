@@ -6,11 +6,11 @@ import {APP_FILTER} from "@nestjs/core";
 import {HttpExceptionFilter} from "./common/filters/http-exception.filter";
 
 @Module({
-      imports: [
-          MongodbModule,
-          UserModule,
-          LoansModule
-      ],
+    imports: [
+        MongodbModule,
+        UserModule,
+        LoansModule
+    ],
     providers: [
         {
             provide: APP_FILTER,

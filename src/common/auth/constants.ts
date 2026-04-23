@@ -1,0 +1,1 @@
+export const TOKEN_AUTH_REPOSITORY = Symbol("TOKEN_AUTH_REPOSITORY");

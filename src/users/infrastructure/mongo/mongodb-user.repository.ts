@@ -41,6 +41,17 @@ export class MongodbUserRepository implements UserRepository {
         });
     }
 
+    async findUserByEmail(email: string): Promise<User | null> {
+        const user = await this.userModel.findOne({ email: email });
+        if (!user) return null;
+        return User.create({
+            userId: user.userId,
+            email: user.email,
+            name: user.name,
+            password: user.password,
+        });
+    }
+
     async findAll(page: number, limit: number): Promise<{ users: User[], metadata: GetMetadataI }> {
         
         const totalDocuments = await this.userModel.countDocuments({ visible: true });

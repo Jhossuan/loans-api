@@ -12,6 +12,8 @@ import {PaginationDto} from "../../common/pagination.dto";
 import { CreateUserUseCase } from "../application/use-cases/create-user.usecase";
 import { UpdateUserUseCase } from "../application/use-cases/update-user.usecase";
 import {GetUsersUseCase} from "../application/use-cases/get-users.usecase";
+import {UserLoginDto} from "./dto/user-login.dto";
+import {LoginUserUseCase} from "../application/use-cases/login-user.usecase";
 
 
 @Controller('users')
@@ -20,7 +22,8 @@ export class UserController {
     constructor(
         private readonly createUserUseCase: CreateUserUseCase,
         private readonly updateUserUseCase: UpdateUserUseCase,
-        private readonly getUserUseCase: GetUsersUseCase
+        private readonly getUserUseCase: GetUsersUseCase,
+        private readonly loginUserUseCase: LoginUserUseCase,
     ){}
 
     @Post('create')
@@ -30,6 +33,17 @@ export class UserController {
             data: user,
             status: HttpStatus.CREATED,
             message: 'User created successfully',
+            success: true,
+        }
+    }
+
+    @Post("login")
+    async login(@Body() userLoginDto: UserLoginDto): Promise<ResponseI<{ accessToken: string }>>{
+        const result = await this.loginUserUseCase.execute(userLoginDto.email, userLoginDto.password);
+        return {
+            data: result,
+            status: HttpStatus.OK,
+            message: 'User login successfully',
             success: true,
         }
     }
