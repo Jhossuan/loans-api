@@ -9,6 +9,8 @@ import { PasswordHasher } from "../application/services/password-hasher";
 import { UpdateUserUseCase } from "../application/use-cases/update-user.usecase";
 import { User as UserDocument, UserSchema as UserSchemaFactory } from "../infrastructure/mongo/schemas/user.schema";
 import {GetUsersUseCase} from "../application/use-cases/get-users.usecase";
+import {RedisCacheService} from "../../common/cache/redis-cache.service";
+import {CacheRepository} from "../../common/cache/cache.repository";
 
 @Module({
     imports: [
@@ -23,6 +25,10 @@ import {GetUsersUseCase} from "../application/use-cases/get-users.usecase";
         {
             provide: "USER_REPOSITORY",
             useClass: MongodbUserRepository,
+        },
+        {
+            provide: "CACHE_REPOSITORY",
+            useClass: RedisCacheService,
         },
         {
             provide: "PASSWORD_HASHER",
@@ -40,8 +46,8 @@ import {GetUsersUseCase} from "../application/use-cases/get-users.usecase";
         },
         {
             provide: GetUsersUseCase,
-            useFactory: (userRepository: UserRepository) => new GetUsersUseCase(userRepository),
-            inject: ["USER_REPOSITORY"]
+            useFactory: (userRepository: UserRepository, cacheRepository: CacheRepository) => new GetUsersUseCase(userRepository, cacheRepository),
+            inject: ["USER_REPOSITORY", "CACHE_REPOSITORY"]
         }
     ],
 })
