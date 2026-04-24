@@ -4,7 +4,9 @@ import {Injectable} from "@nestjs/common";
 
 @Injectable()
 export class JwtTokenService implements AuthTokenRepository {
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(
+        private readonly jwtService: JwtService
+    ) {}
 
     async generate(payload: any): Promise<string> {
         return this.jwtService.signAsync(payload);
