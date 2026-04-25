@@ -14,6 +14,7 @@ import { UpdateUserUseCase } from "../application/use-cases/update-user.usecase"
 import {GetUsersUseCase} from "../application/use-cases/get-users.usecase";
 import {UserLoginDto} from "./dto/user-login.dto";
 import {LoginUserUseCase} from "../application/use-cases/login-user.usecase";
+import {ApiBearerAuth, ApiOperation, ApiResponse} from "@nestjs/swagger";
 
 
 @Controller('users')
@@ -26,6 +27,7 @@ export class UserController {
         private readonly loginUserUseCase: LoginUserUseCase,
     ){}
 
+    @ApiOperation({ summary: 'Endpoint to create a new user' })
     @Post('create')
     async createUser(@Body() createUserDto: CreateUserDto): Promise<ResponseI<User>> {
         const user = await this.createUserUseCase.execute(createUserDto.email, createUserDto.name, createUserDto.password);
@@ -37,6 +39,9 @@ export class UserController {
         }
     }
 
+    @ApiOperation({ summary: 'Endpoint to login' })
+    @ApiResponse({ status: 200, description: 'Login successful' })
+    @ApiResponse({ status: 401, description: 'Invalid credentials' })
     @Post("login")
     async login(@Body() userLoginDto: UserLoginDto): Promise<ResponseI<{ accessToken: string }>>{
         const result = await this.loginUserUseCase.execute(userLoginDto.email, userLoginDto.password);
@@ -48,6 +53,8 @@ export class UserController {
         }
     }
 
+    @ApiOperation({ summary: 'Endpoint to update the user' })
+    @ApiBearerAuth('access-token')
     @Patch('update')
     async updateUser(@Body() updateUserDto: UpdateUserDto, @Param('userId') userId: string): Promise<ResponseI<User>> {
         const user = await this.updateUserUseCase.execute(userId, {
@@ -62,6 +69,8 @@ export class UserController {
         }
     }
 
+    @ApiOperation({ summary: 'Endpoint to get all users' })
+    @ApiBearerAuth('access-token')
     @Get('findAll')
     async findAllUsers(@Query() paginationDto: PaginationDto): Promise<ResponseI<{ users: User[], metadata: GetMetadataI }>> {
         const { page, limit } = paginationDto;
