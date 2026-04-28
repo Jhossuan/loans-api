@@ -25,9 +25,9 @@ export class InterestTerm {
             throw new AppError("Interest term should be an integer");
         }
 
-        if(value > 50){
-            throw new AppError("Interest term must be less than 50%");
-        }
+        // if(value > 50){
+        //     throw new AppError("Interest term must be less than 50%");
+        // }
 
         return new InterestTerm(value);
     }
