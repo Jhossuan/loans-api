@@ -59,5 +59,8 @@ Then you have to login with the default user credentials:
 ```bash
   sonar-scanner
 ```
+---
+### 🔗 SonarQube Guide followed
+[Setting Up and Running SonarQube with Docker Application in Server](https://medium.com/@rithery/setting-up-and-running-sonarqube-with-docker-for-a-nestjs-application-in-server-7dbbdfdb198c)
 
 
