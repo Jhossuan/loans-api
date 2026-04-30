@@ -43,7 +43,7 @@ If you want to check the code and use SonarQube to deep analysis of the code fol
 
 **Step 1**: Run docker compose of sonarqube
 ```bash
-docker compose -f docker-compose.sonarqube.yml
+docker compose -f docker-compose.sonarqube.yml up -d
 ```
 
 **Step 2**:  
