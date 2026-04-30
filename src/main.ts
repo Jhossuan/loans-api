@@ -27,7 +27,7 @@ async function bootstrap() {
       }, 'access-token')
       .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('documentation', app, documentFactory);
 
   app.setGlobalPrefix('api')
   await app.listen(envs.port);

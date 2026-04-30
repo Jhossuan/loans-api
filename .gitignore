@@ -42,4 +42,5 @@ yarn-error.log*
 # --- Logs ---
 logs
 *.log
-npm-debug.log*
+
+.scannerwork
